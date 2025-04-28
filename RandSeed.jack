@@ -1,0 +1,38 @@
+class RandSeed {
+
+    function int getSeed() {
+
+        var int seed;
+        var int key;
+
+        let seed = 0;
+        let key = 0;
+
+        do Output.printString("REGLAS:");
+        do Output.println();
+        do Output.printString("1. No puedes chocar contra las paredes");
+        do Output.println();
+        do Output.printString("2. No puedes chocar contra tu propio cuerpo");
+        do Output.println();
+        do Output.printString("3. Debes comer la comida para crecer");
+        do Output.println();
+        do Output.printString("4. Solo podrás comer hasta 10 manzanas");
+        do Output.println();
+        do Output.printString("Para empezar a jugar, presiona cualquier tecla");
+        do Output.println();
+
+        while(~key) {
+            let seed = seed + 1;
+            if( seed = 32767 ) {
+                let seed = 0;
+            }
+            let key = Keyboard.keyPressed();
+        }
+
+        do Screen.clearScreen();
+
+        return seed;
+
+    }
+
+}

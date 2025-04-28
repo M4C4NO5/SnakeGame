@@ -1,0 +1,235 @@
+class Snake {
+
+    // the game instance
+    field SnakeGame gameInstance;
+
+    // the XY position of the snake's head
+    field int headX, headY;
+
+    // the length of the snake
+    field int snakeLength;
+
+    // growth increment when eating food
+    field int growthIncrement;
+
+    // remaining growth steps
+    field int remainingGrowth;
+
+    // movement direction: 0=none, 1=up, 2=down, 3=left, 4=right
+    field int currentDirection, previousDirection;
+
+    // movement history
+    field Array historyX, historyY;
+    field int historyCapacity;
+
+    // creates a new Snake
+    constructor Snake new(SnakeGame game, int startX, int startY, int initialLength, int growthBy) {
+
+        var int i;
+
+        let gameInstance = game;
+        let headX = startX - initialLength;
+        let headY = startY;
+        let snakeLength = initialLength;
+        let growthIncrement = growthBy;
+
+        let remainingGrowth = 0;
+        let currentDirection = 4;
+        let previousDirection = 4;
+        let historyCapacity = 512;
+        let historyX = Array.new(historyCapacity);
+        let historyY = Array.new(historyCapacity);
+
+        // draw the initial snake
+        let i = 0;
+        while (i < snakeLength) {
+            let headX = headX + 1;
+            do drawHead(gameInstance.getCycle());
+            let i = i + 1;
+            do gameInstance.nextCycle();
+        }
+
+        return this;
+
+    }
+
+    // disposes of the Snake
+    method void dispose() {
+
+        do historyX.dispose();
+        do historyY.dispose();
+        do Memory.deAlloc(this);
+        return;
+
+    }
+
+    // checks if the movement history needs to be rewritten
+    method boolean checkRewriteHistory() {
+
+        if (gameInstance.getCycle() = historyCapacity) {
+            do rewriteHistory();
+            return true;
+        }
+
+        return false;
+
+    }
+
+    // rewrites the movement history
+    method void rewriteHistory() {
+
+        var int i, sourceIndex, targetIndex;
+
+        let i = snakeLength;
+        let targetIndex = 0;
+        let sourceIndex = historyCapacity - snakeLength;
+        while (i > 0) {
+            let historyX[targetIndex] = historyX[sourceIndex];
+            let historyY[targetIndex] = historyY[sourceIndex];
+            let sourceIndex = sourceIndex + 1;
+            let targetIndex = targetIndex + 1;
+            let i = i - 1;
+        }
+
+        return;
+
+    }
+
+    // gets the snake's head position
+    method int posX() {
+        return headX;
+    }
+    method int posY() {
+        return headY;
+    }
+
+    // gets the snake's length
+    method int getLength() {
+        return snakeLength;
+    }
+
+    // gets the current direction
+    method int getDir() {
+        return currentDirection;
+    }
+
+    // gets the previous direction
+    method int getLastDir() {
+        return previousDirection;
+    }
+
+    // sets the current direction
+    method void setDir(int newDirection) {
+        let currentDirection = newDirection;
+        return;
+    }
+
+    // remembers the current direction
+    method void rememberDir() {
+        let previousDirection = currentDirection;
+        return;
+    }
+
+    // checks if the snake can move in the current direction
+    method boolean tryMove() {
+
+        var SnakeGrid gameGrid;
+        let gameGrid = gameInstance.getGrid();
+
+        if (currentDirection = 1) {
+            // up
+            if (headY = 0) {
+                return false;
+            } else {
+                let headY = headY - 1;
+            }
+        }
+        if (currentDirection = 2) {
+            // down
+            if (headY = gameGrid.sizeY()) {
+                return false;
+            } else {
+                let headY = headY + 1;
+            }
+        }
+        if (currentDirection = 3) {
+            // left
+            if (headX = 0) {
+                return false;
+            } else {
+                let headX = headX - 1;
+            }
+        }
+        if (currentDirection = 4) {
+            // right
+            if (headX = gameGrid.sizeX()) {
+                return false;
+            } else {
+                let headX = headX + 1;
+            }
+        }
+
+        // check if the snake collides with itself
+        if (gameGrid.checkOccupied(headX, headY)) {
+            return false;
+        }
+
+        return true;
+
+    }
+
+    // makes the snake grow
+    method void grow(int cycle) {
+
+        // draw the new head
+        do drawHead(cycle);
+
+        // grow or clear the tail
+        if (remainingGrowth > 0) {
+            let remainingGrowth = remainingGrowth - 1;
+            let snakeLength = snakeLength + 1;
+        } else {
+            do clearTail(cycle);
+        }
+
+        return;
+
+    }
+
+    // draws the snake's head
+    method void drawHead(int cycle) {
+
+        var SnakeGrid gameGrid;
+
+        let gameGrid = gameInstance.getGrid();
+        do gameGrid.drawSnakeBit(headX, headY);
+        let historyX[cycle] = headX;
+        let historyY[cycle] = headY;
+
+        return;
+
+    }
+
+    // clears the snake's tail
+    method void clearTail(int cycle) {
+
+        var SnakeGrid gameGrid;
+        var int tailIndex, tailX, tailY;
+
+        let tailIndex = cycle - snakeLength;
+        let tailX = historyX[tailIndex];
+        let tailY = historyY[tailIndex];
+        let gameGrid = gameInstance.getGrid();
+        do gameGrid.clearSnakeBit(tailX, tailY);
+
+        return;
+
+    }
+
+    // handles eating food
+    method void eatFood() {
+        let remainingGrowth = remainingGrowth + growthIncrement;
+        return;
+    }
+
+}
