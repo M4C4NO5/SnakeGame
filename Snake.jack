@@ -139,7 +139,8 @@ class Snake {
         if (currentDirection = 1) {
             // up
             if (headY = 0) {
-                return false;
+                do Output.printString("Error: Out of bounds (up)");
+                do Sys.halt();
             } else {
                 let headY = headY - 1;
             }
@@ -147,7 +148,8 @@ class Snake {
         if (currentDirection = 2) {
             // down
             if (headY = gameGrid.sizeY()) {
-                return false;
+                do Output.printString("Error: Out of bounds (down)");
+                do Sys.halt();
             } else {
                 let headY = headY + 1;
             }
@@ -155,7 +157,8 @@ class Snake {
         if (currentDirection = 3) {
             // left
             if (headX = 0) {
-                return false;
+                do Output.printString("Error: Out of bounds (left)");
+                do Sys.halt();
             } else {
                 let headX = headX - 1;
             }
@@ -163,7 +166,8 @@ class Snake {
         if (currentDirection = 4) {
             // right
             if (headX = gameGrid.sizeX()) {
-                return false;
+                do Output.printString("Error: Out of bounds (right)");
+                do Sys.halt();
             } else {
                 let headX = headX + 1;
             }
