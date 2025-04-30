@@ -60,12 +60,11 @@ class SnakeGrid {
         // don't place the food on top of a snake piece
         let found = false;
         while( ~found ) {
-            let randX = Random.randRange(sizeX);
-            let randY = Random.randRange(sizeY);
+            let randX = Random.randRange(sizeX - 2) + 1; // Ensure at least 1 block from the edges
+            let randY = Random.randRange(sizeY - 2) + 1; // Ensure at least 1 block from the edges
             if( ~ checkOccupied(randX, randY) ) {
                 let found = true;
             }
-
         }
         let foodX = randX;
         let foodY = randY;
