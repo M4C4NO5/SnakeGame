@@ -135,7 +135,7 @@ class Snake {
 
         var SnakeGrid gameGrid;
         let gameGrid = gameInstance.getGrid();
-
+        do Output.printInt(headX);
         if (currentDirection = 1) {
             // up
             if (headY = 0) {
@@ -147,7 +147,7 @@ class Snake {
         }
         if (currentDirection = 2) {
             // down
-            if (headY = gameGrid.sizeY()) {
+            if (headY =  gameGrid.sizeY()) {
                 do Output.printString("Error: Out of bounds (down)");
                 do Sys.halt();
             } else {
@@ -158,14 +158,13 @@ class Snake {
             // left
             if (headX = 0) {
                 do Output.printString("Error: Out of bounds (left)");
-                do Sys.halt();
             } else {
                 let headX = headX - 1;
             }
         }
         if (currentDirection = 4) {
             // right
-            if (headX = gameGrid.sizeX()) {
+            if (headX = 30) {
                 do Output.printString("Error: Out of bounds (right)");
                 do Sys.halt();
             } else {
@@ -175,7 +174,7 @@ class Snake {
 
         // check if the snake collides with itself
         if (gameGrid.checkOccupied(headX, headY)) {
-            return false;
+            do Sys.halt();
         }
 
         return true;
