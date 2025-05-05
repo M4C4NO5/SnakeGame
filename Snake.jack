@@ -135,7 +135,6 @@ class Snake {
 
         var SnakeGrid gameGrid;
         let gameGrid = gameInstance.getGrid();
-        do Output.printInt(headX);
         if (currentDirection = 1) {
             // up
             if (headY = 0) {
